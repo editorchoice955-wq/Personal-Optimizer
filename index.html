@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0f16">
+<title>J.A.R.V.I.S. // PHONE CORE</title>
+<style>
+:root{--cyan:#00eaff;--blue:#167dff;--green:#62ffbf;--red:#ff4e72;--bg:#02070d;--panel:rgba(4,17,29,.78)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% 18%,#06334a 0,#020910 27%,#01040a 68%);color:#dffaff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;background:linear-gradient(rgba(0,234,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,234,255,.035) 1px,transparent 1px);background-size:28px 28px;mask-image:linear-gradient(to bottom,#000,transparent)}
+.app{max-width:540px;margin:auto;padding:15px 14px 35px}.top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #00eaff55;padding-bottom:11px}
+.brand{letter-spacing:3px;font-weight:900;color:var(--cyan);text-shadow:0 0 14px #00eaff}.online{font-size:10px;color:var(--green);letter-spacing:1px}.online i{display:inline-block;width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green);margin-right:5px}
+.hero{position:relative;text-align:center;padding:28px 0 21px}.orb{width:210px;height:210px;margin:auto;border-radius:50%;position:relative;display:grid;place-items:center;filter:drop-shadow(0 0 22px #00eaff55)}
+.orb:before,.orb:after{content:"";position:absolute;inset:6px;border-radius:50%;border:1px solid #00eaff88;box-shadow:0 0 22px #00eaff33 inset}.orb:after{inset:21px;border:2px dashed #00eaff66;animation:spin 12s linear infinite}
+.core{width:118px;height:118px;border-radius:50%;background:radial-gradient(circle,#bfffff 0,#26eaff 8%,#0078aa 30%,#032231 64%,transparent 66%);box-shadow:0 0 30px #00eaff,0 0 70px #00eaff55;animation:pulse 2s ease-in-out infinite}
+.ring{position:absolute;border-radius:50%;border:1px solid #00eaff77}.r1{inset:0}.r2{inset:15px;border-color:#167dff99}.r3{inset:33px;border-style:dotted;border-color:#62ffbf77}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 42px #00eaff,0 0 90px #00eaff66}}
+.state{margin-top:15px;font-size:18px;font-weight:800;letter-spacing:2px}.sub{font-size:10px;color:#6f9eac;letter-spacing:2px;margin-top:5px}
+.card{background:var(--panel);border:1px solid #00eaff35;border-radius:12px;padding:15px;margin:10px 0;box-shadow:0 0 25px #001b2a inset,0 0 12px #00eaff0d}
+.card h3{margin:0 0 12px;font-size:11px;letter-spacing:2px;color:#6ddfff}.grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:#03121d;border:1px solid #00eaff24;border-radius:8px;padding:12px}.label{font-size:10px;color:#638b99;letter-spacing:1px}.value{font-size:20px;font-weight:800;color:#eaffff;margin-top:5px;text-shadow:0 0 8px #00eaff55}
+.line{height:6px;background:#09202b;border-radius:20px;overflow:hidden;margin-top:8px}.bar{height:100%;width:0;background:linear-gradient(90deg,#167dff,#00eaff,#62ffbf);box-shadow:0 0 9px #00eaff;transition:.7s}
+button{width:100%;border:1px solid #00eaffaa;background:linear-gradient(90deg,#04354a,#00627b);color:#dfffff;padding:14px;border-radius:8px;font-weight:900;letter-spacing:1.5px;margin-top:9px;box-shadow:0 0 18px #00eaff22}
+button:active{transform:scale(.98)}button.secondary{background:#06141e;color:#70dfff}
+.log{height:72px;overflow:hidden;font:10px ui-monospace,monospace;color:#61e6ff;line-height:1.6}.log div:before{content:"> ";color:#62ffbf}.small{font-size:10px;line-height:1.5;color:#608895}
+#toast{position:fixed;left:14px;right:14px;bottom:15px;background:#dffcff;color:#001018;padding:12px;border-radius:8px;text-align:center;font-weight:800;box-shadow:0 0 25px #00eaff88;transform:translateY(130px);transition:.25s;z-index:10}#toast.show{transform:translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">J.A.R.V.I.S.</div><div class="online"><i></i>SYSTEM ONLINE</div></div>
+  <section class="hero">
+    <div class="orb"><div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div><div class="core"></div></div>
+    <div class="state" id="status">SYSTEM READY</div><div class="sub">PERSONAL ANDROID OPTIMIZATION CORE</div>
+  </section>
+
+  <div class="card">
+    <h3>◈ CORE DIAGNOSTICS</h3>
+    <div class="grid">
+      <div class="stat"><div class="label">RAM LOAD</div><div class="value" id="ram">--</div></div>
+      <div class="stat"><div class="label">STORAGE</div><div class="value" id="storage">--</div></div>
+      <div class="stat"><div class="label">BATTERY</div><div class="value" id="battery">--</div></div>
+      <div class="stat"><div class="label">THERMAL</div><div class="value" id="temp">--</div></div>
+    </div>
+  </div>
+
+  <div class="card"><h3>◈ MEMORY MATRIX</h3><div class="line"><div class="bar" id="ramBar"></div></div><div class="small" id="ramBadge">Awaiting telemetry</div></div>
+  <div class="card"><h3>◈ STORAGE MATRIX</h3><div class="line"><div class="bar" id="storageBar"></div></div><div class="small" id="storageBadge">Awaiting telemetry</div></div>
+
+  <div class="card"><h3>◈ SYSTEM CONSOLE</h3><div class="log" id="log"></div>
+    <button onclick="scan()">INITIATE FULL SYSTEM SCAN</button>
+    <button class="secondary" onclick="safeCleanup()">EXECUTE SAFE CLEANUP CHECK</button>
+    <button class="secondary" onclick="openStorage()">OPEN ANDROID STORAGE CONTROL</button>
+  </div>
+
+
+<div class="card" id="installCard" style="display:none">
+<h3>◈ J.A.R.V.I.S. CORE INSTALL</h3>
+<div class="small">Install this optimizer on your Android home screen for an app-like experience.</div>
+<button onclick="installPWA()">INSTALL J.A.R.V.I.S.</button>
+</div>
+
+  <div class="card">
+    <h3>◈ ENVIRONMENTAL LINK</h3>
+    <div class="grid">
+      <div class="stat"><div class="label">NETWORK</div><div class="value" id="network">--</div></div>
+      <div class="stat"><div class="label">DATE</div><div class="value" id="date">--</div></div>
+      <div class="stat"><div class="label">TIME</div><div class="value" id="time">--</div></div>
+      <div class="stat"><div class="label">WEATHER</div><div class="value" id="weather">--</div></div>
+    </div>
+    <div class="small" id="location" style="margin-top:10px">LOCATION: requesting permission…</div>
+  </div>
+
+  <div class="card"><h3>◈ DEVICE LINK</h3><div class="small" id="device">Linking telemetry…</div></div>
+  <div class="small" style="text-align:center;margin-top:16px;letter-spacing:1px">J.A.R.V.I.S. HTML PROTOTYPE // V2 HUD</div>
+</div><div id="toast"></div>
+<script>
+const $=id=>document.getElementById(id);
+function log(t){let l=$("log");l.innerHTML+="<div>"+t+"</div>";l.scrollTop=l.scrollHeight}
+function toast(t){let x=$("toast");x.textContent=t;x.classList.add("show");setTimeout(()=>x.classList.remove("show"),2200)}
+async function getBattery(){if(navigator.getBattery){let b=await navigator.getBattery(),p=Math.round(b.level*100);$("battery").textContent=p+"%";return p}$("battery").textContent="N/A";return null}
+async function getMemory(){if(performance.memory){let u=performance.memory.usedJSHeapSize,t=performance.memory.jsHeapSizeLimit,p=Math.min(100,Math.round(u/t*100));$("ram").textContent=p+"%";$("ramBar").style.width=p+"%";$("ramBadge").textContent=p+"% telemetry load";return p}$("ram").textContent="NATIVE";$("ramBadge").textContent="Native Android API required";return null}
+async function getStorage(){if(navigator.storage?.estimate){let e=await navigator.storage.estimate(),u=e.usage||0,t=e.quota||0;if(t){let p=Math.round(u/t*100);$("storage").textContent=p+"%";$("storageBar").style.width=p+"%";$("storageBadge").textContent=Math.round(u/1048576)+" MB web data";return p}}$("storage").textContent="NATIVE";$("storageBadge").textContent="Native Android API required";return null}
+
+let audioCtx;
+function beep(freq=650,duration=.08,type="sine"){
+  try{
+    audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(.045,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+duration);
+    o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+duration);
+  }catch(e){}
+}
+function initSounds(){beep(520,.06);setTimeout(()=>beep(780,.08),75)}
+function updateNetwork(){
+  const n=navigator.connection;
+  if(!navigator.onLine){$("network").textContent="OFFLINE";return}
+  $("network").textContent=n?.effectiveType ? n.effectiveType.toUpperCase() : "ONLINE";
+}
+function updateClock(){
+  const d=new Date();
+  $("date").textContent=d.toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"});
+  $("time").textContent=d.toLocaleTimeString(undefined,{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+}
+async function updateLocation(){
+  if(!navigator.geolocation){$("location").textContent="LOCATION: UNAVAILABLE";return}
+  navigator.geolocation.getCurrentPosition(
+    p=>$("location").textContent="LOCATION: "+p.coords.latitude.toFixed(2)+", "+p.coords.longitude.toFixed(2),
+    ()=>$("location").textContent="LOCATION: PERMISSION REQUIRED",
+    {enableHighAccuracy:false,timeout:7000,maximumAge:300000}
+  );
+}
+async function updateWeather(){
+  // Browser-only prototype: weather is intentionally kept simple.
+  // The final APK can use a weather API/native provider and display only a condition word.
+  if(!navigator.onLine){$("weather").textContent="UNKNOWN";return}
+  $("weather").textContent="CHECKING";
+  try{
+    const p=await new Promise((resolve,reject)=>{
+      if(!navigator.geolocation)return reject();
+      navigator.geolocation.getCurrentPosition(resolve,reject,{enableHighAccuracy:false,timeout:5000,maximumAge:300000});
+    });
+    const r=await fetch("https://api.open-meteo.com/v1/forecast?latitude="+p.coords.latitude+"&longitude="+p.coords.longitude+"&current=weather_code",{cache:"no-store"});
+    const j=await r.json(),c=j.current?.weather_code;
+    let w="CLEAR";
+    if([1,2,3].includes(c))w="CLOUDY";
+    else if([45,48].includes(c))w="CLOUDY";
+    else if([51,53,55,56,57,61,63,65,66,67,80,81,82].includes(c))w="RAINY";
+    else if([71,73,75,77,85,86].includes(c))w="SNOWY";
+    else if([95,96,99].includes(c))w="STORMY";
+    $("weather").textContent=w;
+  }catch(e){$("weather").textContent="UNKNOWN"}
+}
+function environment(){
+  updateNetwork();updateClock();updateLocation();updateWeather();
+  setInterval(updateClock,1000);
+  setInterval(updateNetwork,5000);
+  window.addEventListener("online",updateNetwork);window.addEventListener("offline",updateNetwork);
+}
+
+function deviceInfo(){$("device").innerHTML="Platform: "+navigator.platform+"<br>Display: "+screen.width+" × "+screen.height+"<br>Network: "+(navigator.onLine?"ONLINE":"OFFLINE")}
+async function scan(){ initSounds(); $("status").textContent="SCANNING SYSTEM…";log("Initializing diagnostic sequence");log("Reading memory telemetry");let [b,r,s]=await Promise.all([getBattery(),getMemory(),getStorage()]);log("Reading storage telemetry");let score=(b==null?80:b);if(r!=null)score=(score+(100-r))/2;if(s!=null)score=(score+(100-s))/2;score=Math.round(score);$("status").textContent=score>=75?"SYSTEM NOMINAL":"OPTIMIZATION ADVISED";log("Diagnostic sequence complete: "+score+"%");toast("J.A.R.V.I.S. scan complete")}
+function safeCleanup(){beep(880,.07);log("Safe cleanup check executed");toast("No unsafe files were deleted")}
+function openStorage(){log("Native storage control requested");toast("Final APK will connect this to Android settings")}
+deviceInfo();environment();scan();
+
+document.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>beep(420,.045,"square")));
+
+let deferredInstall=null;
+window.addEventListener("beforeinstallprompt",e=>{
+  e.preventDefault(); deferredInstall=e;
+  const c=document.getElementById("installCard"); if(c)c.style.display="block";
+});
+async function installPWA(){
+  if(!deferredInstall){toast("Use browser menu → Add to Home screen");return}
+  deferredInstall.prompt();
+  await deferredInstall.userChoice;
+  deferredInstall=null;
+  const c=document.getElementById("installCard");if(c)c.style.display="none";
+}
+if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+
+</script>
+</body>
+</html>
